@@ -1,0 +1,13 @@
+
+{% extends 'base.html' %}
+{% block content %}
+    <h2>{{ blog.title }}</h2>
+{% if blog.photo %}
+<p><a href="{% url 'edit_blog' blog.id %}">Modifier le billet</a></p>
+    <img src="{{ blog.photo.image.url }}">
+    <p>{{ blog.photo.caption }}</p>
+    <p>{{ blog.content }}</p>
+{% endif %}
+<p>{{ blog.content }}</p>
+<a href="{% url 'home' %}">Retour à l'accueil</a>
+{% endblock content %}

@@ -1,15 +1,46 @@
-
-
-<html>
-    <head>
-        <title>FotoBlog</title>
-    </head>
-    <body>
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>FotoBlog</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="sidebar">
         <h1>FotoBlog</h1>
-        {% block content %}{% endblock content %}
+
         {% if request.user.is_authenticated %}
-            <p>Vous êtes connecté en tant que {{ request.user }}. <a
-                href="{% url 'logout' %}">Se déconnecter</a></p>
+            <p>Salut, {{ request.user.username }} !</p>
+
+            
+            <img src="{% static 'images/default-profile.jpg' %}" alt="profil">
+
+            <nav>
+                <a href="{% url 'home' %}">Accueil</a>
+                {% if perms.blog.add_blog %}
+                    <a href="{% url 'blog_create' %}">Écrire un billet</a>
+                {% endif %}
+                {% if perms.blog.add_photo %}
+                    <a href="{% url 'upload_photo' %}">Téléverser une photo</a>
+                    <a href="{% url 'create_multiple_photos' %}">Téléverser plusieurs photos</a>
+                {% endif %}
+                <a href="{% url 'user_profile' %}">Mon profil</a>
+                <a href="{% url 'logout' %}">Se déconnecter</a>
+            <p><a href="{% url 'follow_users' %}">Suivre des utilisateurs</a></p>
+            <p><a href="{% url 'upload_profile_photo' %}">Changer la photo de profil</a></p>
+            </nav>
+        {% else %}
+            <p><a href="{% url 'login' %}">Se connecter</a></p>
         {% endif %}
-    </body>
+    </div>
+
+    <div class="main-content">
+        {% block content %}
+        
+        {% endblock %}
+    </div>
+</body>
 </html>
+
+

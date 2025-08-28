@@ -1,9 +1,12 @@
 from django.contrib.auth import authenticate, login,logout
 from django.shortcuts import redirect, render
+from .forms import UploadProfilePhotoForm
+from django.contrib.auth.decorators import login_required
 from django.views.generic import View
 from django.conf import settings
 from django.contrib.auth import login
 from . import forms
+
 
 
 class LoginPageView(View):
@@ -87,3 +90,26 @@ def signup_page(request):
             login(request, user)
             return redirect(settings.LOGIN_REDIRECT_URL)
     return render(request, 'authentication/signup.html', context={'form': form})
+
+
+
+
+@login_required
+def upload_profile_photo(request):
+    profile = request.user.profile
+
+    if request.method == 'POST':
+        form = UploadProfilePhotoForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('home')  
+    else:
+        form = UploadProfilePhotoForm(instance=profile)
+
+    return render(request, 'authentication/upload_profile_photo.html', {'form': form})
+
+
+@login_required
+def user_profile(request):
+    return render(request, 'authentication/profile.html')
+
